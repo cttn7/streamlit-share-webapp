@@ -3,3 +3,4 @@ pandas
 numpy
 scikit-learn
 joblib  # if using joblib to save/load the model
+openpyxl
