@@ -44,7 +44,7 @@ with tab1:
 
                     fig, ax = plt.subplots()
                     sns.barplot(x="Importance", y="Feature", data=importance_df, ax=ax)
-                    ax.set_title("🔍 Feature Importance")
+                    ax.set_title("🔎 Feature Importance")
                     st.pyplot(fig)
                 except AttributeError:
                     st.warning("⚠️ Model does not support feature importance.")
@@ -52,16 +52,16 @@ with tab1:
                 # Interactive scatter map (if coordinates are available)
                 if {"latitude", "longitude"}.issubset(df.columns):
                     try:
-                        fig_map = px.scatter_mapbox(
+                        fig_map = px.scatter_map(
                             df,
                             lat="latitude",
                             lon="longitude",
                             color="EV_Hotspot_Score",
                             size="EV_Hotspot_Score",
-                            color_continuous_scale="Turbo",
-                            zoom=1,
+                            color_continuous_scale="YlOrRd",
+                            zoom=10,
                             hover_name=df.index,
-                            mapbox_style="open-street-map",
+                            map_style="open-street-map",
                             title="📍 EV Hotspot Prediction Map"
                         )
                         st.plotly_chart(fig_map)
