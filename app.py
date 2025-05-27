@@ -68,6 +68,25 @@ with tab1:
                 # 📊 Show feature importance
                 plot_feature_importance(model, model_choice)
 
+                # Interactive scatter map (if coordinates are available)
+                if {"latitude", "longitude"}.issubset(df.columns):
+                    try:
+                        fig_map = px.scatter_map(
+                            df,
+                            lat="latitude",
+                            lon="longitude",
+                            color="EV_Hotspot_Score",
+                            size="EV_Hotspot_Score",
+                            color_continuous_scale="YlOrRd",
+                            zoom=10,
+                            hover_name=df.index,
+                            map_style="open-street-map",
+                            title="📍 EV Hotspot Prediction Map"
+                        )
+                        st.plotly_chart(fig_map)
+                    except Exception as e:
+                        st.warning(f"Map could not be rendered: {e}")
+
                 # 💾 Excel download
                 output = io.BytesIO()
                 with pd.ExcelWriter(output, engine='openpyxl') as writer:
