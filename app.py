@@ -5,6 +5,11 @@ import joblib
 import io
 import plotly.express as px
 
+# 🌐 Page setup
+st.set_page_config(page_title="EV Hotspot Predictor", layout="centered")
+st.title("🔌 EV Charging Hotspot Predictor")
+st.markdown("Choose to enter single values manually **or** upload an Excel file with multiple entries.")
+
 # 🔧 Sidebar: Model selection
 st.sidebar.header("⚙️ Settings")
 model_choice = st.sidebar.selectbox("Choose Machine Learning Model", ["Random Forest", "XGBoost"])
@@ -17,11 +22,6 @@ def load_model(model_name):
         return joblib.load("xgb_model.pkl")
 
 model = load_model(model_choice)
-
-# 🌐 Page setup
-st.set_page_config(page_title="EV Hotspot Predictor", layout="centered")
-st.title("🔌 EV Charging Hotspot Predictor")
-st.markdown("Choose to enter single values manually **or** upload an Excel file with multiple entries.")
 
 # 📊 Feature Importance Plot
 def plot_feature_importance(model, model_choice):
