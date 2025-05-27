@@ -2,8 +2,10 @@
 import streamlit as st
 import pandas as pd
 import joblib
-
 import io
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
 
 # Load the model
 model = joblib.load('model.pkl')
@@ -26,19 +28,55 @@ with tab1:
             if not required_columns.issubset(df.columns):
                 st.error("❌ Excel file must include columns: 'incomeperperson', 'internetuserate', 'urbanrate'")
             else:
+                # Make predictions
                 predictions = model.predict(df[["incomeperperson", "internetuserate", "urbanrate"]])
                 df["EV_Hotspot_Score"] = predictions
                 st.success("✅ Predictions generated!")
 
+                # Show predictions
                 st.dataframe(df)
 
-                # ...inside your code, after predictions are added to df
+                # Feature importance chart
+                try:
+                    importances = model.feature_importances_
+                    features = ["incomeperperson", "internetuserate", "urbanrate"]
+                    importance_df = pd.DataFrame({"Feature": features, "Importance": importances})
+
+                    fig, ax = plt.subplots()
+                    sns.barplot(x="Importance", y="Feature", data=importance_df, ax=ax)
+                    ax.set_title("🔍 Feature Importance")
+                    st.pyplot(fig)
+                except AttributeError:
+                    st.warning("⚠️ Model does not support feature importance.")
+
+                # Interactive scatter map (if coordinates are available)
+                if {"latitude", "longitude"}.issubset(df.columns):
+                    try:
+                        fig_map = px.scatter_mapbox(
+                            df,
+                            lat="latitude",
+                            lon="longitude",
+                            color="EV_Hotspot_Score",
+                            size="EV_Hotspot_Score",
+                            color_continuous_scale="Turbo",
+                            zoom=1,
+                            hover_name=df.index,
+                            mapbox_style="open-street-map",
+                            title="📍 EV Hotspot Prediction Map"
+                        )
+                        st.plotly_chart(fig_map)
+                    except Exception as e:
+                        st.warning(f"Map could not be rendered: {e}")
+
+                # Download predictions
                 output = io.BytesIO()
                 with pd.ExcelWriter(output, engine='openpyxl') as writer:
                     df.to_excel(writer, index=False)
                 output.seek(0)
 
-                st.download_button("📥 Download Results", output, file_name="ev_predictions.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                st.download_button("📥 Download Results", output,
+                                   file_name="ev_predictions.xlsx",
+                                   mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
         except Exception as e:
             st.error(f"Error processing file: {e}")
