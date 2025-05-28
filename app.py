@@ -7,14 +7,16 @@ import plotly.express as px
 from math import radians, sin, cos, sqrt, atan2
 
 # 🌐 Page setup
-st.set_page_config(page_title="EV Hotspot Predictor", layout="centered")
-st.title("🔌 EVCP Hotspots & Nearest CP Query")
-st.markdown("Choose to enter single values manually **or** upload an Excel file with multiple entries.")
+st.set_page_config(page_title="EVCP Query Tool", layout="centered")
+st.title("🔌 EVCP Query")
+st.markdown("Webapp tool to predict EVCP hotspots and analyze nearby CPs")
+st.markdown("Upload an Excel file with multiple entries **or** enter single values manually")
 
 # 🔧 Sidebar: Model selection
 st.sidebar.header("⚙️ Settings")
 model_choice = st.sidebar.selectbox("Choose Machine Learning Model", ["Random Forest", "XGBoost"])
 cp_search = st.sidebar.text_input("Enter CP Code (e.g. QY194, CQ207)")
+max_distance_meters = st.sidebar.slider("Maximum distance to search (meters)", min_value=50, max_value=1000, value=200, step=20)
 
 @st.cache_resource
 def load_model(model_name):
@@ -118,10 +120,10 @@ with tab1:
                                 return haversine(lat1, lon1, row["latitude"], row["longitude"])
 
                             df["distance_meters"] = df.apply(compute_distance, axis=1)
-                            nearby_df = df[(df["distance_meters"] <= 200) & (df["cp-code"] != cp_search)]
+                            nearby_df = df[(df["distance_meters"] <= max_distance_meters) & (df["cp-code"] != cp_search)]
 
                             if not nearby_df.empty:
-                                st.success(f"✅ Found {len(nearby_df)} nearby charging points within 200 meters:")
+                                st.success(f"✅ Found {len(nearby_df)} nearby charging points within {max_distance_meters} meters:")
                                 st.dataframe(nearby_df[["cp-code", "latitude", "longitude", "distance_meters"]])
                                 # Plot map
                                 fig = px.scatter_mapbox(
