@@ -102,7 +102,7 @@ with tab1:
                                 orientation='h',
                                 x=0.5,
                                 xanchor='center',
-                                y=0,  # move it below the plot
+                                y=-0.3,  # move it below the plot
                                 title="CP Demand"
                             )
                         )
@@ -155,7 +155,7 @@ with tab1:
                                         orientation='h',
                                         x=0.5,
                                         xanchor='center',
-                                        y=0,  # move it below the plot
+                                        y=-0.3,  # move it below the plot
                                         title="Distance"
                                     )
                                 )
