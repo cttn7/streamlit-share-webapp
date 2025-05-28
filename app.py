@@ -8,11 +8,8 @@ from math import radians, sin, cos, sqrt, atan2
 
 # 🌐 Page setup
 st.set_page_config(page_title="EV Hotspot Predictor", layout="centered")
-st.title("🔌 EV Charging Hotspot Predictor")
+st.title("🔌 EVCP Hotspots & Nearest CP Query")
 st.markdown("Choose to enter single values manually **or** upload an Excel file with multiple entries.")
-
-st.markdown("---")
-st.subheader("📍 Search Nearby Charging Points (200 meters radius)")
 
 # 🔧 Sidebar: Model selection
 st.sidebar.header("⚙️ Settings")
@@ -45,7 +42,7 @@ def plot_feature_importance(model, model_choice):
 
     df_imp = df_imp.sort_values("Importance", ascending=True)
     fig = px.bar(df_imp, x="Importance", y="Feature", orientation="h",
-                 title=f"{model_choice} Feature Importance", height=300)
+                 title=f"💡{model_choice} Feature Importance", height=300)
     st.plotly_chart(fig, use_container_width=True)
 
 # Haversine function
@@ -121,11 +118,35 @@ with tab1:
                                 return haversine(lat1, lon1, row["latitude"], row["longitude"])
 
                             df["distance_meters"] = df.apply(compute_distance, axis=1)
-                            nearby = df[(df["distance_meters"] <= 200) & (df["cp-code"] != cp_search)]
+                            nearby_df = df[(df["distance_meters"] <= 200) & (df["cp-code"] != cp_search)]
 
-                            if not nearby.empty:
+                            if not nearby_df.empty:
                                 st.success(f"✅ Found {len(nearby)} nearby charging points within 200 meters:")
                                 st.dataframe(nearby[["cp-code", "latitude", "longitude", "distance_meters"]])
+                                # Plot map
+                                fig = px.scatter_mapbox(
+                                    nearby_df,
+                                    lat="latitude",
+                                    lon="longitude",
+                                    color="distance_km",
+                                    size_max=15,
+                                    zoom=15,
+                                    mapbox_style="open-street-map",
+                                    hover_name="cp-code",
+                                    title="Nearby Charging Points",
+                                )
+
+                                # Add reference point
+                                fig.add_trace(
+                                    px.scatter_mapbox(
+                                        pd.DataFrame([ref_row]),
+                                        lat="latitude",
+                                        lon="longitude",
+                                        hover_name="cp-code",
+                                    ).data[0]
+                                )
+
+                                st.plotly_chart(fig, use_container_width=True)
                             else:
                                 st.info("No nearby charging stations found within 200 meters.")
                         else:
