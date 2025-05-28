@@ -16,7 +16,7 @@ st.markdown("Upload an Excel file with multiple entries **or** enter single valu
 st.sidebar.header("⚙️ Settings")
 model_choice = st.sidebar.selectbox("Choose Machine Learning Model", ["Random Forest", "XGBoost"])
 cp_search = st.sidebar.text_input("Enter CP Code (e.g. QY194, CQ207)")
-max_distance_meters = st.sidebar.slider("Maximum distance to search (meters)", min_value=50, max_value=1000, value=200, step=20)
+max_distance_meters = st.sidebar.slider("Maximum distance to search (meters)", min_value=50, max_value=1000, value=200, step=10)
 
 @st.cache_resource
 def load_model(model_name):
@@ -151,7 +151,7 @@ with tab1:
 
                                 st.plotly_chart(fig, use_container_width=True)
                             else:
-                                st.info("No nearby charging stations found within 200 meters.")
+                                st.info("No nearby charging stations found within {max_distance_meters} meters.")
                         else:
                             st.error("❌ CP Code not found in uploaded file.")
                     else:
