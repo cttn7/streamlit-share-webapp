@@ -146,8 +146,7 @@ with tab1:
                                     map_style="open-street-map",
                                     hover_name="cp-code",
                                     title="🔌 Nearby Charging Points",
-                                    height=700,
-                                    legend
+                                    height=700
                                 )
                                 fig_nearby.update_layout(
                                     legend=dict(
