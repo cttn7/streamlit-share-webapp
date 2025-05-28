@@ -97,6 +97,16 @@ with tab1:
                             title="📍 EV Hotspot Prediction Map",
                             height=700
                         )
+                        fig_map.update_layout(
+                            legend=dict(
+                                orientation="h",        # horizontal legend
+                                yanchor="bottom",
+                                y=0,                    # y=0 means bottom
+                                xanchor="center",
+                                x=0.5                   # x=0.5 means center
+                            )
+                        )
+
                         st.plotly_chart(fig_map)
                     except Exception as e:
                         st.warning(f"Map could not be rendered: {e}")
@@ -127,7 +137,7 @@ with tab1:
                                 st.success(f"✅ Found {len(nearby_df)} nearby charging points within {max_distance_meters} meters:")
                                 st.dataframe(nearby_df[["cp-code", "latitude", "longitude", "distance_meters"]])
                                 # Plot map
-                                fig = px.scatter_mapbox(
+                                fig_nearby = px.scatter_mapbox(
                                     nearby_df,
                                     lat="latitude",
                                     lon="longitude",
@@ -140,9 +150,18 @@ with tab1:
                                     title="🔌 Nearby Charging Points",
                                     height=700
                                 )
+                                fig_nearby.update_layout(
+                                    legend=dict(
+                                        orientation="h",        # horizontal legend
+                                        yanchor="bottom",
+                                        y=0,                    # y=0 means bottom
+                                        xanchor="center",
+                                        x=0.5                   # x=0.5 means center
+                                    )
+                                )
 
                                 # Add reference point
-                                fig.add_trace(
+                                fig_nearby.add_trace(
                                     px.scatter_mapbox(
                                         pd.DataFrame([ref_row]),
                                         lat="latitude",
