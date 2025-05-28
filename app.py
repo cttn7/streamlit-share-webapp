@@ -132,7 +132,7 @@ with tab1:
                                     lon="longitude",
                                     color="distance_meters",
                                     color_continuous_scale="Temps",
-                                    size=100,
+                                    size='distance_meters',
                                     zoom=15,
                                     mapbox_style="open-street-map",
                                     hover_name="cp-code",
