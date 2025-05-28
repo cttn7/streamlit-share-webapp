@@ -128,7 +128,7 @@ with tab1:
                                     nearby_df,
                                     lat="latitude",
                                     lon="longitude",
-                                    color="distance_km",
+                                    color="distance_meters",
                                     size_max=15,
                                     zoom=15,
                                     mapbox_style="open-street-map",
