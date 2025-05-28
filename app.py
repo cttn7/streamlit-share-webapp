@@ -98,10 +98,12 @@ with tab1:
                             height=700
                         )
                         fig_map.update_layout(
-                            legend=dict(
-                                orientation="h",        # horizontal legend
-                                yanchor="bottom",
-                                xanchor="center",
+                            coloraxis_colorbar=dict(
+                                orientation='h',
+                                x=0.5,
+                                xanchor='center',
+                                y=-0.2,  # move it below the plot
+                                title="EV Hotspot Score"
                             )
                         )
 
@@ -149,10 +151,12 @@ with tab1:
                                     height=700
                                 )
                                 fig_nearby.update_layout(
-                                    legend=dict(
-                                        orientation="h",        # horizontal legend
-                                        yanchor="bottom",
-                                        xanchor="center",
+                                    coloraxis_colorbar=dict(
+                                        orientation='h',
+                                        x=0.5,
+                                        xanchor='center',
+                                        y=-0.2,  # move it below the plot
+                                        title="Distance in Meters"
                                     )
                                 )
 
