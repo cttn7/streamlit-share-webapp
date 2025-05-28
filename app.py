@@ -15,7 +15,7 @@ st.markdown("Upload an Excel file with multiple entries **or** enter single valu
 # 🔧 Sidebar: Model selection
 st.sidebar.header("⚙️ Settings")
 model_choice = st.sidebar.selectbox("Choose Machine Learning Model", ["Random Forest", "XGBoost"])
-cp_search = st.sidebar.text_input("Enter CP Code (try LJ850, IE967)")
+cp_search = st.sidebar.text_input("Enter CP Code (e.g. LJ850, IE967)")
 max_distance_meters = st.sidebar.slider("Maximum distance to search (meters)", min_value=10, max_value=1000, value=200, step=10)
 
 @st.cache_resource
@@ -95,7 +95,7 @@ with tab1:
                             hover_name="cp-code",
                             map_style="open-street-map",
                             title="📍 EV Hotspot Prediction Map",
-                            width=2000px
+                            width=2000
                         )
                         st.plotly_chart(fig_map)
                     except Exception as e:
