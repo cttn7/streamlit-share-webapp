@@ -4,11 +4,15 @@ import pandas as pd
 import joblib
 import io
 import plotly.express as px
+from math import radians, sin, cos, sqrt, atan2
 
 # 🌐 Page setup
 st.set_page_config(page_title="EV Hotspot Predictor", layout="centered")
 st.title("🔌 EV Charging Hotspot Predictor")
 st.markdown("Choose to enter single values manually **or** upload an Excel file with multiple entries.")
+
+st.markdown("---")
+st.subheader("📍 Search Nearby Charging Points (200 meters radius)")
 
 # 🔧 Sidebar: Model selection
 st.sidebar.header("⚙️ Settings")
@@ -43,6 +47,15 @@ def plot_feature_importance(model, model_choice):
                  title=f"{model_choice} Feature Importance", height=300)
     st.plotly_chart(fig, use_container_width=True)
 
+# Haversine function
+def haversine(lat1, lon1, lat2, lon2):
+    R = 6371.0  # Earth radius in kilometers
+    dlat = radians(lat2 - lat1)
+    dlon = radians(lon2 - lon1)
+    a = sin(dlat / 2)**2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    return R * c  # Distance in kilometers
+
 # 📑 Tabs
 tab1, tab2 = st.tabs(["📥 Upload Excel", "✍️ Manual Entry"])
 
@@ -53,9 +66,9 @@ with tab1:
         try:
             df = pd.read_excel(uploaded_file)
 
-            required_columns = {"incomeperperson", "internetuserate", "urbanrate"}
+            required_columns = {"incomeperperson", "internetuserate", "urbanrate", "cp-code"}
             if not required_columns.issubset(df.columns):
-                st.error("❌ Excel file must include columns: 'incomeperperson', 'internetuserate', 'urbanrate'")
+                st.error("❌ Excel file must include columns: 'incomeperperson', 'internetuserate', 'urbanrate', 'cp-code'")
             else:
                 # 💡 Prediction
                 predictions = model.predict(df[["incomeperperson", "internetuserate", "urbanrate"]])
@@ -68,7 +81,7 @@ with tab1:
                 # 📊 Show feature importance
                 plot_feature_importance(model, model_choice)
 
-                # Interactive scatter map (if coordinates are available)
+                # Interactive scatter map (if coordinates are available) **hover_name=df.index
                 if {"latitude", "longitude"}.issubset(df.columns):
                     try:
                         fig_map = px.scatter_map(
@@ -79,7 +92,7 @@ with tab1:
                             size="EV_Hotspot_Score",
                             color_continuous_scale="YlOrRd",
                             zoom=10,
-                            hover_name=df.index,
+                            hover_name="cp-code",
                             map_style="open-street-map",
                             title="📍 EV Hotspot Prediction Map"
                         )
@@ -94,6 +107,30 @@ with tab1:
                 output.seek(0)
 
                 st.download_button("📥 Download Results", output, file_name="ev_predictions.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+                cp_search = st.text_input("Enter CP Code (e.g. LR711, EA473)")
+
+                if cp_search:
+                    if "cp-code" in df.columns and "latitude" in df.columns and "longitude" in df.columns:
+                        if cp_search in df["cp-code"].values:
+                            ref_row = df[df["cp-code"] == cp_search].iloc[0]
+                            lat1, lon1 = ref_row["latitude"], ref_row["longitude"]
+
+                            def compute_distance(row):
+                                return haversine(lat1, lon1, row["latitude"], row["longitude"])
+
+                            df["distance_km"] = df.apply(compute_distance, axis=1)
+                            nearby = df[(df["distance_km"] <= 0.2) & (df["cp-code"] != cp_search)]
+
+                            if not nearby.empty:
+                                st.success(f"✅ Found {len(nearby)} nearby charging points within 200 meters:")
+                                st.dataframe(nearby[["cp-code", "latitude", "longitude", "distance_km"]])
+                            else:
+                                st.info("No nearby charging stations found within 200 meters.")
+                        else:
+                            st.error("❌ CP Code not found in uploaded file.")
+                    else:
+                        st.error("❌ Missing required columns: 'cp-code', 'latitude', or 'longitude'")
 
         except Exception as e:
             st.error(f"Error processing file: {e}")
