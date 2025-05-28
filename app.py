@@ -95,15 +95,15 @@ with tab1:
                             hover_name="cp-code",
                             map_style="open-street-map",
                             title="📍 EV Hotspot Prediction Map",
-                            height=700
+                            height=550
                         )
                         fig_map.update_layout(
                             coloraxis_colorbar=dict(
                                 orientation='h',
                                 x=0.5,
                                 xanchor='center',
-                                y=-0.2,  # move it below the plot
-                                title="EVCP Hotspot Score"
+                                y=0.2,  # move it above the plot
+                                title="CP Demand"
                             )
                         )
 
@@ -148,15 +148,15 @@ with tab1:
                                     map_style="open-street-map",
                                     hover_name="cp-code",
                                     title="🔌 Nearby Charging Points",
-                                    height=700
+                                    height=550
                                 )
                                 fig_nearby.update_layout(
                                     coloraxis_colorbar=dict(
                                         orientation='h',
                                         x=0.5,
                                         xanchor='center',
-                                        y=-0.2,  # move it below the plot
-                                        title="Distance (in meters)"
+                                        y=0.2,  # move it above the plot
+                                        title="Distance"
                                     )
                                 )
 
