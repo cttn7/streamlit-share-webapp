@@ -101,9 +101,7 @@ with tab1:
                             legend=dict(
                                 orientation="h",        # horizontal legend
                                 yanchor="bottom",
-                                y=0,                    # y=0 means bottom
                                 xanchor="center",
-                                x=0.5                   # x=0.5 means center
                             )
                         )
 
@@ -154,9 +152,7 @@ with tab1:
                                     legend=dict(
                                         orientation="h",        # horizontal legend
                                         yanchor="bottom",
-                                        y=0,                    # y=0 means bottom
                                         xanchor="center",
-                                        x=0.5                   # x=0.5 means center
                                     )
                                 )
 
@@ -170,7 +166,7 @@ with tab1:
                                     ).data[0]
                                 )
 
-                                st.plotly_chart(fig, use_container_width=True)
+                                st.plotly_chart(fig_nearby, use_container_width=True)
                             else:
                                 st.info(f"No nearby charging stations found within {max_distance_meters} meters.")
                         else:
