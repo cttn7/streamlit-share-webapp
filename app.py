@@ -121,8 +121,8 @@ with tab1:
                             nearby_df = df[(df["distance_meters"] <= 200) & (df["cp-code"] != cp_search)]
 
                             if not nearby_df.empty:
-                                st.success(f"✅ Found {len(nearby)} nearby charging points within 200 meters:")
-                                st.dataframe(nearby[["cp-code", "latitude", "longitude", "distance_meters"]])
+                                st.success(f"✅ Found {len(nearby_df)} nearby charging points within 200 meters:")
+                                st.dataframe(nearby_df[["cp-code", "latitude", "longitude", "distance_meters"]])
                                 # Plot map
                                 fig = px.scatter_mapbox(
                                     nearby_df,
