@@ -95,7 +95,7 @@ with tab1:
                             hover_name="cp-code",
                             map_style="open-street-map",
                             title="📍 EV Hotspot Prediction Map",
-                            height=500
+                            height=700
                         )
                         st.plotly_chart(fig_map)
                     except Exception as e:
@@ -138,7 +138,7 @@ with tab1:
                                     mapbox_style="open-street-map",
                                     hover_name="cp-code",
                                     title="🔌 Nearby Charging Points",
-                                    height=500
+                                    height=700
                                 )
 
                                 # Add reference point
