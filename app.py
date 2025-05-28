@@ -17,6 +17,7 @@ st.subheader("📍 Search Nearby Charging Points (200 meters radius)")
 # 🔧 Sidebar: Model selection
 st.sidebar.header("⚙️ Settings")
 model_choice = st.sidebar.selectbox("Choose Machine Learning Model", ["Random Forest", "XGBoost"])
+cp_search = st.sidebar.text_input("Enter CP Code (e.g. QY194, CQ207)")
 
 @st.cache_resource
 def load_model(model_name):
@@ -49,12 +50,12 @@ def plot_feature_importance(model, model_choice):
 
 # Haversine function
 def haversine(lat1, lon1, lat2, lon2):
-    R = 6371.0  # Earth radius in kilometers
+    R = 6371000.0  # Earth radius in meters
     dlat = radians(lat2 - lat1)
     dlon = radians(lon2 - lon1)
     a = sin(dlat / 2)**2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon / 2)**2
     c = 2 * atan2(sqrt(a), sqrt(1 - a))
-    return R * c  # Distance in kilometers
+    return R * c  # Distance in meters
 
 # 📑 Tabs
 tab1, tab2 = st.tabs(["📥 Upload Excel", "✍️ Manual Entry"])
@@ -108,7 +109,7 @@ with tab1:
 
                 st.download_button("📥 Download Results", output, file_name="ev_predictions.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
-                cp_search = st.text_input("Enter CP Code (e.g. LR711, EA473)")
+                # cp_search = st.text_input("Enter CP Code (e.g. LR711, EA473)")
 
                 if cp_search:
                     if "cp-code" in df.columns and "latitude" in df.columns and "longitude" in df.columns:
@@ -119,12 +120,12 @@ with tab1:
                             def compute_distance(row):
                                 return haversine(lat1, lon1, row["latitude"], row["longitude"])
 
-                            df["distance_km"] = df.apply(compute_distance, axis=1)
-                            nearby = df[(df["distance_km"] <= 0.2) & (df["cp-code"] != cp_search)]
+                            df["distance_meters"] = df.apply(compute_distance, axis=1)
+                            nearby = df[(df["distance_meters"] <= 200) & (df["cp-code"] != cp_search)]
 
                             if not nearby.empty:
                                 st.success(f"✅ Found {len(nearby)} nearby charging points within 200 meters:")
-                                st.dataframe(nearby[["cp-code", "latitude", "longitude", "distance_km"]])
+                                st.dataframe(nearby[["cp-code", "latitude", "longitude", "distance_meters"]])
                             else:
                                 st.info("No nearby charging stations found within 200 meters.")
                         else:
