@@ -103,7 +103,7 @@ with tab1:
                                 x=0.5,
                                 xanchor='center',
                                 y=-0.2,  # move it below the plot
-                                title="EV Hotspot Score"
+                                title="EVCP Hotspot Score"
                             )
                         )
 
@@ -156,7 +156,7 @@ with tab1:
                                         x=0.5,
                                         xanchor='center',
                                         y=-0.2,  # move it below the plot
-                                        title="Distance in Meters"
+                                        title="Distance (in meters)"
                                     )
                                 )
 
