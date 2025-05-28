@@ -7,7 +7,7 @@ import plotly.express as px
 from math import radians, sin, cos, sqrt, atan2
 
 # 🌐 Page setup
-st.set_page_config(page_title="EVCP Query Tool", layout="wide")
+st.set_page_config(page_title="EVCP Query Tool", layout="center")
 st.title("🔌 EVCP Query")
 st.markdown("Webapp tool to predict EVCP hotspots and analyze nearby CPs")
 st.markdown("Upload an Excel file with multiple entries **or** enter single values manually")
@@ -163,7 +163,6 @@ with tab1:
                                         lat="latitude",
                                         lon="longitude",
                                         hover_name="cp-code",
-                                        size=50,
                                     ).data[0]
                                 )
 
