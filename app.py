@@ -135,7 +135,7 @@ with tab1:
                                 st.success(f"✅ Found {len(nearby_df)} nearby charging points within {max_distance_meters} meters:")
                                 st.dataframe(nearby_df[["cp-code", "latitude", "longitude", "distance_meters"]])
                                 # Plot map
-                                fig_nearby = px.scatter_mapbox(
+                                fig_nearby = px.scatter_map(
                                     nearby_df,
                                     lat="latitude",
                                     lon="longitude",
@@ -143,10 +143,11 @@ with tab1:
                                     color_continuous_scale="Temps",
                                     size='distance_meters',
                                     zoom=15,
-                                    mapbox_style="open-street-map",
+                                    map_style="open-street-map",
                                     hover_name="cp-code",
                                     title="🔌 Nearby Charging Points",
-                                    height=700
+                                    height=700,
+                                    legend
                                 )
                                 fig_nearby.update_layout(
                                     legend=dict(
@@ -158,11 +159,12 @@ with tab1:
 
                                 # Add reference point
                                 fig_nearby.add_trace(
-                                    px.scatter_mapbox(
+                                    px.scatter_map(
                                         pd.DataFrame([ref_row]),
                                         lat="latitude",
                                         lon="longitude",
                                         hover_name="cp-code",
+                                        size=50,
                                     ).data[0]
                                 )
 
