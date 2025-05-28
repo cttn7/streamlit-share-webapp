@@ -7,7 +7,7 @@ import plotly.express as px
 from math import radians, sin, cos, sqrt, atan2
 
 # 🌐 Page setup
-st.set_page_config(page_title="EVCP Query Tool", layout="centered")
+st.set_page_config(page_title="EVCP Query Tool", layout="wide")
 st.title("🔌 EVCP Query")
 st.markdown("Webapp tool to predict EVCP hotspots and analyze nearby CPs")
 st.markdown("Upload an Excel file with multiple entries **or** enter single values manually")
@@ -136,7 +136,7 @@ with tab1:
                                     zoom=15,
                                     mapbox_style="open-street-map",
                                     hover_name="cp-code",
-                                    title="Nearby Charging Points",
+                                    title="🔌 Nearby Charging Points",
                                 )
 
                                 # Add reference point
