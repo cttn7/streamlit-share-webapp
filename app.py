@@ -94,8 +94,7 @@ with tab1:
                             zoom=10,
                             hover_name="cp-code",
                             map_style="open-street-map",
-                            title="📍 EV Hotspot Prediction Map",
-                            width=2000
+                            title="📍 EV Hotspot Prediction Map"
                         )
                         st.plotly_chart(fig_map)
                     except Exception as e:
@@ -132,7 +131,7 @@ with tab1:
                                     lat="latitude",
                                     lon="longitude",
                                     color="distance_meters",
-                                    color_continuous_scale="YlOrRd",
+                                    color_continuous_scale="Temps",
                                     size='distance_meters',
                                     zoom=15,
                                     mapbox_style="open-street-map",
