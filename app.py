@@ -137,6 +137,7 @@ with tab1:
                                     mapbox_style="open-street-map",
                                     hover_name="cp-code",
                                     title="🔌 Nearby Charging Points",
+                                    height=1000
                                 )
 
                                 # Add reference point
