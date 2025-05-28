@@ -151,7 +151,7 @@ with tab1:
 
                                 st.plotly_chart(fig, use_container_width=True)
                             else:
-                                st.info("No nearby charging stations found within {max_distance_meters} meters.")
+                                st.info(f"No nearby charging stations found within {max_distance_meters} meters.")
                         else:
                             st.error("❌ CP Code not found in uploaded file.")
                     else:
